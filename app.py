@@ -52,15 +52,29 @@ input_data = pd.DataFrame({
 # -------------------------------
 # Prediction
 # -------------------------------
+# -------------------------------
+# Prediction (with debug)
+# -------------------------------
 if st.button("🚨 Detect Fraud"):
-    prediction = model.predict(input_data.values)[0]
-    proba = model.predict_proba(input_data.values)[0][1] * 100
+    try:
+        prediction = model.predict(input_data.values)[0]
+        proba = model.predict_proba(input_data.values)[0][1] * 100
 
+        if prediction == 1:
+            st.error(f"⚠️ Fraudulent Transaction Detected! (Confidence: {proba:.2f}%)")
+        else:
+            st.success(f"✅ Legitimate Transaction (Confidence: {100 - proba:.2f}%)")
 
-    if prediction == 1:
-        st.error(f"⚠️ Fraudulent Transaction Detected! (Confidence: {proba:.2f}%)")
-    else:
-        st.success(f"✅ Legitimate Transaction (Confidence: {100 - proba:.2f}%)")
+    except ValueError as e:
+        st.error("❌ Input shape or features mismatch!")
+        st.write("Error details:", str(e))
+
+        if hasattr(model, 'n_features_in_'):
+            st.write(f"Model expects {model.n_features_in_} features.")
+            st.write(f"Input data shape: {input_data.shape}")
+        if hasattr(model, 'feature_names_in_'):
+            st.write("Expected feature names:", list(model.feature_names_in_))
+        st.write("Input DataFrame columns:", list(input_data.columns))
 
 # -------------------------------
 # Footer
