@@ -53,8 +53,9 @@ input_data = pd.DataFrame({
 # Prediction
 # -------------------------------
 if st.button("🚨 Detect Fraud"):
-    prediction = model.predict(input_data)[0]
-    proba = model.predict_proba(input_data)[0][1] * 100
+    prediction = model.predict(input_data.values)[0]
+    proba = model.predict_proba(input_data.values)[0][1] * 100
+
 
     if prediction == 1:
         st.error(f"⚠️ Fraudulent Transaction Detected! (Confidence: {proba:.2f}%)")
