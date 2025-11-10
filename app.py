@@ -4,9 +4,9 @@ import numpy as np
 import pickle
 
 # -------------------------------
-# Load the trained model
+# Load the trained AdaBoost model
 # -------------------------------
-model = pickle.load(open("gradient_boosting_classifier.pkl", "rb"))
+model = pickle.load(open("ada_model.pkl", "rb"))
 
 # -------------------------------
 # App title and description
@@ -15,7 +15,7 @@ st.set_page_config(page_title="E-commerce Fraud Detection", layout="wide")
 
 st.title("🛒 E-commerce Fraud Detection")
 st.markdown("""
-This app uses a trained **Gradient Boosting (AdaBoost-style)** model to predict fraudulent transactions.
+This app uses a trained **AdaBoost Classifier** to predict whether an e-commerce transaction is fraudulent.
 """)
 
 # -------------------------------
@@ -27,7 +27,7 @@ col1, col2, col3 = st.columns(3)
 
 with col1:
     amount = st.number_input("Transaction Amount ($)", min_value=0.0, max_value=10000.0, value=100.0)
-    time = st.number_input("Transaction Time (in seconds)", min_value=0.0, max_value=86400.0, value=3600.0)
+    time = st.number_input("Transaction Time (seconds since start of day)", min_value=0.0, max_value=86400.0, value=3600.0)
 
 with col2:
     age = st.number_input("Customer Age", min_value=18, max_value=90, value=30)
@@ -38,7 +38,7 @@ with col3:
     previous_fraud = st.selectbox("Previous Fraud History?", ["No", "Yes"])
 
 # -------------------------------
-# Data preprocessing (example)
+# Data preprocessing (convert categorical to numeric)
 # -------------------------------
 input_data = pd.DataFrame({
     'amount': [amount],
@@ -65,4 +65,5 @@ if st.button("🚨 Detect Fraud"):
 # Footer
 # -------------------------------
 st.markdown("---")
-st.markdown("💡 *Model: Gradient Boosting Classifier (AdaBoost style)*")
+st.markdown("💡 *Model: AdaBoost Classifier trained on e-commerce transaction data.*")
+
